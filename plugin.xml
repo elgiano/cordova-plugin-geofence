@@ -47,9 +47,9 @@
         <source-file src="src/android/RemoveGeofenceCommand.java" target-dir="src/com/cowbell/cordova/geofence" />
 
         <framework src="com.google.android.gms:play-services-location:+" />
-        <preference name="ANDROID_SUPPORT_COMPAT_VERSION" default="28.+"/>
-        <framework src="com.android.support:support-compat:$ANDROID_SUPPORT_COMPAT_VERSION"/>
         <lib-file src="src/android/libs/gson-2.3.jar" />
+        <lib-file src="src/android/libs/android-support-v4.jar"/>
+
 
         <config-file target="config.xml" parent="/*">
             <feature name="GeofencePlugin">
