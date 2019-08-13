@@ -1,7 +1,7 @@
 package com.cowbell.cordova.geofence;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
+//import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -15,7 +15,7 @@ import java.util.List;
 public class ReceiveTransitionsIntentService extends IntentService {
     protected static final String GeofenceTransitionIntent = "com.cowbell.cordova.geofence.TRANSITION";
     protected BeepHelper beepHelper;
-    protected GeoNotificationNotifier notifier;
+    //protected GeoNotificationNotifier notifier;
     protected GeoNotificationStore store;
 
     /**
@@ -41,10 +41,10 @@ public class ReceiveTransitionsIntentService extends IntentService {
         Logger logger = Logger.getLogger();
         logger.log(Log.DEBUG, "ReceiveTransitionsIntentService - onHandleIntent");
         Intent broadcastIntent = new Intent(GeofenceTransitionIntent);
-        notifier = new GeoNotificationNotifier(
+        /*notifier = new GeoNotificationNotifier(
             (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE),
             this
-        );
+        );*/
 
         // TODO: refactor this, too long
         // First check for errors
@@ -71,7 +71,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
                     if (geoNotification != null) {
                         if (geoNotification.notification != null) {
-                            notifier.notify(geoNotification.notification);
+                            //notifier.notify(geoNotification.notification);
                         }
                         geoNotification.transitionType = transitionType;
                         geoNotifications.add(geoNotification);

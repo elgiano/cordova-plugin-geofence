@@ -32,7 +32,6 @@
         <source-file src="src/android/CommandExecutionHandler.java" target-dir="src/com/cowbell/cordova/geofence" />
         <source-file src="src/android/GeoNotification.java" target-dir="src/com/cowbell/cordova/geofence" />
         <source-file src="src/android/GeoNotificationManager.java" target-dir="src/com/cowbell/cordova/geofence" />
-        <source-file src="src/android/GeoNotificationNotifier.java" target-dir="src/com/cowbell/cordova/geofence" />
         <source-file src="src/android/GeoNotificationStore.java" target-dir="src/com/cowbell/cordova/geofence" />
         <source-file src="src/android/GeofencePlugin.java" target-dir="src/com/cowbell/cordova/geofence" />
         <source-file src="src/android/GoogleServiceCommandExecutor.java" target-dir="src/com/cowbell/cordova/geofence" />
