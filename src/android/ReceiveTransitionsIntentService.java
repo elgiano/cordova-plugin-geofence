@@ -111,7 +111,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
                             .getGeoNotification(fenceId);
 
                     if (geoNotification != null) {
-                        if (geoNotification.notification != null) {
+                      /*  if (geoNotification.notification != null) {
                             //notifier.notify(geoNotification.notification);
                             try {
                                 Options options = notificationOptions(geoNotification.notification);
@@ -121,7 +121,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
                             }catch(JSONException err){
                                 logger.log(Log.ERROR, err.getMessage());
                             }
-                        }
+                        }*/
                         geoNotification.transitionType = transitionType;
                         geoNotifications.add(geoNotification);
                     }
