@@ -12,13 +12,16 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 import android.util.Log;
 
-// TODO: temporary
-static final String CHANNEL_ID = "default-channel-id";
-
-// TODO: temporary
-private static final CharSequence CHANNEL_NAME = "Default channel";
 
 public class GeoNotificationNotifier {
+
+  // TODO: temporary
+  static final String CHANNEL_ID = "default-channel-id";
+
+  // TODO: temporary
+  private static final CharSequence CHANNEL_NAME = "Default channel";
+
+
     private NotificationManager notificationManager;
     private Context context;
     private BeepHelper beepHelper;
