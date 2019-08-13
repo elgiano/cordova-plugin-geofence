@@ -39,7 +39,7 @@ public class GeoNotificationNotifier {
         this.context = context;
         this.beepHelper = new BeepHelper();
         this.logger = Logger.getLogger();
-        this.createNotificationChannel();
+        this.createNotificationChannel(notificationManager);
     }
 
     public void notify(Notification notification) {
