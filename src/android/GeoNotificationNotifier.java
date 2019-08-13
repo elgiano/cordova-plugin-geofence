@@ -12,6 +12,12 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 import android.util.Log;
 
+// TODO: temporary
+static final String CHANNEL_ID = "default-channel-id";
+
+// TODO: temporary
+private static final CharSequence CHANNEL_NAME = "Default channel";
+
 public class GeoNotificationNotifier {
     private NotificationManager notificationManager;
     private Context context;
@@ -22,11 +28,8 @@ public class GeoNotificationNotifier {
     // Create the NotificationChannel, but only on API 26+ because
     // the NotificationChannel class is new and not in the support library
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-          CharSequence name = "test-channel";
-          String description = "test-channel-description";
           int importance = NotificationManager.IMPORTANCE_DEFAULT;
-          NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-          channel.setDescription(description);
+          NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);
           // Register the channel with the system; you can't change the importance
           // or other notification behaviors after this
           notificationManager.createNotificationChannel(channel);
