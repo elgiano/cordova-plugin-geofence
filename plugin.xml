@@ -47,7 +47,7 @@
 
         <framework src="com.google.android.gms:play-services-location:+" />
         <lib-file src="src/android/libs/gson-2.3.jar" />
-        <preference name="ANDROID_SUPPORT_V4_VERSION" default="26.+" />
+        <preference name="ANDROID_SUPPORT_V4_VERSION" default="28.+" />
         <framework src="com.android.support:support-v4:$ANDROID_SUPPORT_V4_VERSION" />
 
 
