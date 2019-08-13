@@ -145,7 +145,7 @@ public class GeofencePlugin extends CordovaPlugin {
             // REGISTER BROADCAST RECEIVER
             IntentFilter filter = new IntentFilter("com.cowbell.cordova.geofence.TRANSITION");
             TransitionReceiver rec = new TransitionReceiver();
-            this.cordova.getActivity().registerReceiver(rec,filter);
+            //this.cordova.getActivity().registerReceiver(rec,filter);
             callbackContext.success();
         }
     }
