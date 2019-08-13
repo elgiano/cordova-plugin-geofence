@@ -47,9 +47,6 @@
 
         <framework src="com.google.android.gms:play-services-location:+" />
         <lib-file src="src/android/libs/gson-2.3.jar" />
-        <preference name="ANDROID_SUPPORT_V4_VERSION" default="28.+" />
-        <framework src="com.android.support:support-v4:$ANDROID_SUPPORT_V4_VERSION" />
-
 
         <config-file target="config.xml" parent="/*">
             <feature name="GeofencePlugin">
@@ -75,6 +72,8 @@
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
             <uses-permission android:name="android.permission.VIBRATE" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+
         </config-file>
 
     </platform>
