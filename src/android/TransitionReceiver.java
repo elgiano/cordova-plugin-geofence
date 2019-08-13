@@ -1,19 +1,13 @@
 package com.cowbell.cordova.geofence;
 
-import android.app.IntentService;
-//import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingEvent;
+import android.os.AsyncTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import de.appplant.cordova.plugin.localnotification.TriggerReceiver;
 import de.appplant.cordova.plugin.notification.Manager;
@@ -21,14 +15,15 @@ import de.appplant.cordova.plugin.notification.Options;
 import de.appplant.cordova.plugin.notification.Request;
 
 
-public class ReceiveTransitionsIntentService extends IntentService {
-    protected static final String GeofenceTransitionIntent = "com.cowbell.cordova.geofence.TRANSITION";
-    protected BeepHelper beepHelper;
-    //protected GeoNotificationNotifier notifier;
-    protected GeoNotificationStore store;
 
-    private Options notificationOptions(Notification notification) throws JSONException{
+public class TransitionReceiver extends BroadcastReceiver {
 
+
+
+    private Options notificationOptions(Notification notification) throws JSONException {
+
+        JSONObject notData = new JSONObject(notification.getDataJson());
+        int id = notData.optString("$id","").hashCode();
         JSONObject dict = new JSONObject();
         JSONObject trig = new JSONObject(("{\"type\":\"calendar\"}"));
         JSONObject progBar = new JSONObject(("{\"enabled\":false}"));
@@ -50,96 +45,87 @@ public class ReceiveTransitionsIntentService extends IntentService {
         dict.put("wakeup",true);
         dict.put("autoClear",true);
         dict.put("defaults",0);
-        dict.put("id",1);
+        dict.put("id",id);
         dict.put("number",1);
         dict.put("priority",1);
+        dict.put("group","places");
+
 
 
         Options options = new Options(dict);
 
         return options;
-    }
-    /**
-     * Sets an identifier for the service
-     */
-    public ReceiveTransitionsIntentService() {
-        super("ReceiveTransitionsIntentService");
-        beepHelper = new BeepHelper();
-        store = new GeoNotificationStore(this);
-        Logger.setLogger(new Logger(GeofencePlugin.TAG, this, false));
+
+
+        /*
+                "groupSummary": false,
+
+
+                "meta": {
+            "plugin": "cordova-plugin-local-notification",
+                    "version": "0.9-beta.2"
+        }*/
     }
 
-    /**
-     * Handles incoming intents
-     *
-     * @param intent
-     *            The Intent sent by Location Services. This Intent is provided
-     *            to Location Services (inside a PendingIntent) when you call
-     *            addGeofences()
-     */
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public void onReceive(Context context, Intent intent) {
+        Logger.setLogger(new Logger(GeofencePlugin.TAG, context, false));
         Logger logger = Logger.getLogger();
-        logger.log(Log.DEBUG, "ReceiveTransitionsIntentService - onHandleIntent");
-        Intent broadcastIntent = new Intent(GeofenceTransitionIntent);
-        /*notifier = new GeoNotificationNotifier(
-            (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE),
-            this
-        );*/
 
-        // TODO: refactor this, too long
-        // First check for errors
-        GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
-        if (geofencingEvent.hasError()) {
-            // Get the error code with a static method
-            int errorCode = geofencingEvent.getErrorCode();
-            String error = "Location Services error: " + Integer.toString(errorCode);
-            // Log the error
-            logger.log(Log.ERROR, error);
-            broadcastIntent.putExtra("error", error);
+        String error = intent.getStringExtra("error");
+
+        if (error != null) {
+            //handle error
+            logger.log(Log.DEBUG, error);
         } else {
-            // Get the type of transition (entry or exit)
-            int transitionType = geofencingEvent.getGeofenceTransition();
-            if ((transitionType == Geofence.GEOFENCE_TRANSITION_ENTER)
-                    || (transitionType == Geofence.GEOFENCE_TRANSITION_EXIT)) {
-                logger.log(Log.DEBUG, "Geofence transition detected");
-                List<Geofence> triggerList = geofencingEvent.getTriggeringGeofences();
-                List<GeoNotification> geoNotifications = new ArrayList<GeoNotification>();
-                for (Geofence fence : triggerList) {
-                    String fenceId = fence.getRequestId();
-                    GeoNotification geoNotification = store
-                            .getGeoNotification(fenceId);
-
-                    if (geoNotification != null) {
-                        if (geoNotification.notification != null) {
-                            logger.log(Log.DEBUG, "Geofence transition notifying");
-                            //notifier.notify(geoNotification.notification);
-                            try {
-                                Options options = notificationOptions(geoNotification.notification);
-                                Request request = new Request(options);
-                                Manager.getInstance(getApplicationContext()).schedule(request,TriggerReceiver.class);
-
-                            }catch(JSONException err){
-                                logger.log(Log.ERROR, err.getMessage());
-                            }
-                        }
-                        geoNotification.transitionType = transitionType;
-                        geoNotifications.add(geoNotification);
-                    }
-                }
-
-                if (geoNotifications.size() > 0) {
-                    broadcastIntent.putExtra("transitionData", Gson.get().toJson(geoNotifications));
-                    GeofencePlugin.onTransitionReceived(geoNotifications);
-
-                }
-            } else {
-                String error = "Geofence transition error: " + transitionType;
-                logger.log(Log.ERROR, error);
-                broadcastIntent.putExtra("error", error);
-
-            }
+            String geofencesJson = intent.getStringExtra("transitionData");
+            PostLocationTask task = new TransitionReceiver.PostLocationTask();
+            AsyncParams params = new AsyncParams(context,geofencesJson);
+            task.execute(params);
         }
-        sendBroadcast(broadcastIntent);
+    }
+
+
+    private static class AsyncParams{
+        public Context context;
+        public String geofencesJson;
+
+        AsyncParams(Context context,String geofencesJson){
+            this.context = context;
+            this.geofencesJson = geofencesJson;
+        }
+    }
+
+
+    private class PostLocationTask extends AsyncTask<AsyncParams, Void, String> {
+
+        @Override
+        protected String doInBackground(AsyncParams... params) {
+            String geofencesJson = params[0].geofencesJson;
+            Context context = params[0].context;
+            try {
+
+                Log.println(Log.DEBUG, GeofencePlugin.TAG, "Executing PostLocationTask#doInBackground");
+
+                GeoNotification[] geoNotifications = Gson.get().fromJson(geofencesJson, GeoNotification[].class);
+
+                for (int i=0; i < geoNotifications.length; i++){
+                    GeoNotification geoNotification = geoNotifications[i];
+                    Options options = notificationOptions(geoNotification.notification);
+                    Request request = new Request(options);
+                    Manager.getInstance(context).schedule(request, TriggerReceiver.class);
+
+                }
+            } catch (Throwable e) {
+                Log.println(Log.ERROR, GeofencePlugin.TAG, "Exception receiving geofence: " + e);
+            }
+
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+        }
     }
 }
