@@ -2,6 +2,7 @@ package com.cowbell.cordova.geofence;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.Manifest;
@@ -141,6 +142,10 @@ public class GeofencePlugin extends CordovaPlugin {
         if (!hasPermissions(permissions)) {
             PermissionHelper.requestPermissions(this, 0, permissions);
         } else {
+            // REGISTER BROADCAST RECEIVER
+            IntentFilter filter = new IntentFilter("com.cowbell.cordova.geofence.TRANSITION");
+            TransitionReceiver rec = new TransitionReceiver();
+            this.cordova.getActivity().registerReceiver(rec,filter);
             callbackContext.success();
         }
     }
