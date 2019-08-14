@@ -19,7 +19,7 @@ public class RemoveGeofenceClient  extends AbstractGoogleServiceCommand{
     private PendingIntent pendingIntent;
     private GeofencingClient client;
 
-    public AddGeofenceClient(Context context,  List<String> geofencesIds){
+    public RemoveGeofenceClient(Context context,  List<String> geofencesIds){
         super(context);
         this.client = LocationServices.getGeofencingClient(context);
         this.geofencesIds = geofencesIds;
@@ -57,5 +57,6 @@ public class RemoveGeofenceClient  extends AbstractGoogleServiceCommand{
             exception.printStackTrace();
             CommandExecuted(exception);
         }
+      }
     }
 }
