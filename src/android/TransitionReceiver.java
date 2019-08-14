@@ -55,16 +55,10 @@ public class TransitionReceiver extends BroadcastReceiver {
         Options options = new Options(dict);
 
         return options;
-
-
         /*
-                "groupSummary": false,
-
-
-                "meta": {
-            "plugin": "cordova-plugin-local-notification",
-                    "version": "0.9-beta.2"
-        }*/
+        "groupSummary": false,
+        "meta": { "plugin": "cordova-plugin-local-notification","version": "0.9-beta.2"}
+        */
     }
 
     @Override
@@ -79,9 +73,25 @@ public class TransitionReceiver extends BroadcastReceiver {
             logger.log(Log.DEBUG, error);
         } else {
             String geofencesJson = intent.getStringExtra("transitionData");
-            PostLocationTask task = new TransitionReceiver.PostLocationTask();
-            AsyncParams params = new AsyncParams(context,geofencesJson);
-            task.execute(params);
+            //PostLocationTask task = new TransitionReceiver.PostLocationTask();
+            //AsyncParams params = new AsyncParams(context,geofencesJson);
+            //task.execute(params);
+            try {
+
+                Log.println(Log.DEBUG, GeofencePlugin.TAG, "Executing PostLocationTask#doInBackground");
+
+                GeoNotification[] geoNotifications = Gson.get().fromJson(geofencesJson, GeoNotification[].class);
+
+                for (int i=0; i < geoNotifications.length; i++){
+                    GeoNotification geoNotification = geoNotifications[i];
+                    Options options = notificationOptions(geoNotification.notification);
+                    Request request = new Request(options);
+                    Manager.getInstance(context).schedule(request, TriggerReceiver.class);
+
+                }
+            } catch (Throwable e) {
+                Log.println(Log.ERROR, GeofencePlugin.TAG, "Exception receiving geofence: " + e);
+            }
         }
     }
 
