@@ -81,7 +81,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Logger logger = Logger.getLogger();
         logger.log(Log.DEBUG, "ReceiveTransitionsIntentService - onHandleIntent");
-        Intent broadcastIntent = new Intent(context,TransitionReceiver.class);//new Intent(GeofenceTransitionIntent);
+        Intent broadcastIntent = new Intent(getApplicationContext(),TransitionReceiver.class);//new Intent(GeofenceTransitionIntent);
         /*notifier = new GeoNotificationNotifier(
             (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE),
             this
