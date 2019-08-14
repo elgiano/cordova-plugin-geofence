@@ -44,7 +44,7 @@ public class GeoNotificationManager {
         }
         if (!geoFences.isEmpty()) {
             googleServiceCommandExecutor.QueueToExecute(
-                new AddGeofenceCommand(context, pendingIntent, geoFences)
+                new AddGeofenceClient(context, pendingIntent, geoFences)
             );
         }
     }
@@ -72,7 +72,7 @@ public class GeoNotificationManager {
             geoNotificationStore.setGeoNotification(geo);
             newGeofences.add(geo.toGeofence());
         }
-        AddGeofenceCommand geoFenceCmd = new AddGeofenceCommand(
+        AddGeofenceClient geoFenceCmd = new AddGeofenceClient(
             context,
             pendingIntent,
             newGeofences
@@ -84,7 +84,7 @@ public class GeoNotificationManager {
     }
 
     public void removeGeoNotifications(List<String> ids, final CallbackContext callback) {
-        RemoveGeofenceCommand cmd = new RemoveGeofenceCommand(context, ids);
+        RemoveGeofenceClient cmd = new RemoveGeofenceClient(context, ids);
         if (callback != null) {
             cmd.addListener(new CommandExecutionHandler(callback));
         }

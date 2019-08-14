@@ -87,10 +87,11 @@ public class TransitionReceiver extends BroadcastReceiver {
 
                 for (int i=0; i < geoNotifications.length; i++){
                     GeoNotification geoNotification = geoNotifications[i];
-                    Options options = notificationOptions(geoNotification.notification);
-                    Request request = new Request(options);
-                    Manager.getInstance(context).schedule(request, TriggerReceiver.class);
-
+                    if(geoNotification.notification != null) {
+                        Options options = notificationOptions(geoNotification.notification);
+                        Request request = new Request(options);
+                        Manager.getInstance(context).schedule(request, TriggerReceiver.class);
+                    }
                 }
             } catch (Throwable e) {
                 logger.log(Log.ERROR, "Exception receiving geofence: " + e);
@@ -98,47 +99,4 @@ public class TransitionReceiver extends BroadcastReceiver {
         }
     }
 
-
-    private static class AsyncParams{
-        public Context context;
-        public String geofencesJson;
-
-        AsyncParams(Context context,String geofencesJson){
-            this.context = context;
-            this.geofencesJson = geofencesJson;
-        }
-    }
-
-
-    private class PostLocationTask extends AsyncTask<AsyncParams, Void, String> {
-
-        @Override
-        protected String doInBackground(AsyncParams... params) {
-            String geofencesJson = params[0].geofencesJson;
-            Context context = params[0].context;
-            try {
-
-                Log.println(Log.DEBUG, GeofencePlugin.TAG, "Executing PostLocationTask#doInBackground");
-
-                GeoNotification[] geoNotifications = Gson.get().fromJson(geofencesJson, GeoNotification[].class);
-
-                for (int i=0; i < geoNotifications.length; i++){
-                    GeoNotification geoNotification = geoNotifications[i];
-                    Options options = notificationOptions(geoNotification.notification);
-                    Request request = new Request(options);
-                    Manager.getInstance(context).schedule(request, TriggerReceiver.class);
-
-                }
-            } catch (Throwable e) {
-                Log.println(Log.ERROR, GeofencePlugin.TAG, "Exception receiving geofence: " + e);
-            }
-
-            return "Executed";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-        }
-    }
 }
