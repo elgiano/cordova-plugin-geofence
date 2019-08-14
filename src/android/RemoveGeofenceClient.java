@@ -29,6 +29,7 @@ public class RemoveGeofenceClient  extends AbstractGoogleServiceCommand{
     public void ExecuteCustomCode() {
       if (geofencesIds != null && geofencesIds.size() > 0) {
           logger.log(Log.DEBUG, "Removing geofences...");
+          try{
             this.client
                     .removeGeofences(geofencesIds)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
