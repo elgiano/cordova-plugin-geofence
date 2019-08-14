@@ -81,7 +81,7 @@ public class TransitionReceiver extends BroadcastReceiver {
             //task.execute(params);
             try {
 
-                logger.log(Log.DEBUG, "Executing PostLocationTask#doInBackground" )
+                logger.log(Log.DEBUG, "Executing PostLocationTask#doInBackground" );
 
                 GeoNotification[] geoNotifications = Gson.get().fromJson(geofencesJson, GeoNotification[].class);
 
