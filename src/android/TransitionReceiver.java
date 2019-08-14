@@ -68,6 +68,9 @@ public class TransitionReceiver extends BroadcastReceiver {
 
         String error = intent.getStringExtra("error");
 
+
+        logger.log(Log.DEBUG,"BroadcastReceiver awake!");
+        Log.println(Log.DEBUG,"GeofencePlugin","TEST BCRec-Log");
         if (error != null) {
             //handle error
             logger.log(Log.DEBUG, error);
@@ -78,7 +81,7 @@ public class TransitionReceiver extends BroadcastReceiver {
             //task.execute(params);
             try {
 
-                Log.println(Log.DEBUG, GeofencePlugin.TAG, "Executing PostLocationTask#doInBackground");
+                logger.log(Log.DEBUG, "Executing PostLocationTask#doInBackground" )
 
                 GeoNotification[] geoNotifications = Gson.get().fromJson(geofencesJson, GeoNotification[].class);
 
@@ -90,7 +93,7 @@ public class TransitionReceiver extends BroadcastReceiver {
 
                 }
             } catch (Throwable e) {
-                Log.println(Log.ERROR, GeofencePlugin.TAG, "Exception receiving geofence: " + e);
+                logger.log(Log.ERROR, "Exception receiving geofence: " + e);
             }
         }
     }

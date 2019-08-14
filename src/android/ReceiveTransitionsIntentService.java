@@ -140,6 +140,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
             }
         }
+        logger.log(Log.DEBUG,"Broadcasting Intent");
         sendBroadcast(broadcastIntent);
     }
 }
